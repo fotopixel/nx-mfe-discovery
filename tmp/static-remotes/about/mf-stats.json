@@ -1,0 +1,192 @@
+{
+  "id": "about",
+  "name": "about",
+  "metaData": {
+    "name": "about",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "0.0.1",
+      "buildName": "about"
+    },
+    "remoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": "",
+      "api": ""
+    },
+    "globalName": "about",
+    "pluginVersion": "0.21.6",
+    "prefetchInterface": false,
+    "publicPath": "auto"
+  },
+  "shared": [
+    {
+      "singleton": true,
+      "requiredVersion": "11.14.0",
+      "shareScope": "default",
+      "strictVersion": true,
+      "name": "@emotion/react",
+      "version": "11.14.0",
+      "eager": false,
+      "id": "about:@emotion/react",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "node_modules_pnpm_emotion_react_11_14_0__types_react_19_2_14_react_19_2_4_node_modules_emotio-a7c3440.js",
+            "node_modules_pnpm_emotion_react_11_14_0__types_react_19_2_14_react_19_2_4_node_modules_emotio-a7c3441.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    },
+    {
+      "singleton": true,
+      "requiredVersion": "11.14.1",
+      "shareScope": "default",
+      "strictVersion": true,
+      "name": "@emotion/styled",
+      "version": "11.14.1",
+      "eager": false,
+      "id": "about:@emotion/styled",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "node_modules_pnpm_emotion_styled_11_14_1__emotion_react_11_14_0__types_react_19_2_14_react_19-737edd.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    },
+    {
+      "singleton": true,
+      "requiredVersion": "^19.0.0",
+      "shareScope": "default",
+      "strictVersion": true,
+      "name": "react-dom/client",
+      "version": "19.2.4",
+      "eager": false,
+      "id": "about:react-dom/client",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "node_modules_pnpm_react-dom_19_2_4_react_19_2_4_node_modules_react-dom_client_js.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    },
+    {
+      "singleton": true,
+      "requiredVersion": "^19.0.0",
+      "shareScope": "default",
+      "strictVersion": true,
+      "eager": true,
+      "name": "react-dom",
+      "version": "19.2.4",
+      "id": "about:react-dom",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "remoteEntry.js",
+            "main.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    },
+    {
+      "singleton": true,
+      "requiredVersion": "^19.0.0",
+      "shareScope": "default",
+      "strictVersion": true,
+      "name": "react/jsx-dev-runtime",
+      "version": "19.2.4",
+      "eager": false,
+      "id": "about:react/jsx-dev-runtime",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "node_modules_pnpm_react_19_2_4_node_modules_react_jsx-dev-runtime_js.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    },
+    {
+      "singleton": true,
+      "requiredVersion": "^19.0.0",
+      "shareScope": "default",
+      "strictVersion": true,
+      "eager": true,
+      "name": "react",
+      "version": "19.2.4",
+      "id": "about:react",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "remoteEntry.js",
+            "main.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    }
+  ],
+  "remotes": [],
+  "exposes": [
+    {
+      "path": "./Module",
+      "id": "about:Module",
+      "name": "Module",
+      "requires": [],
+      "file": "src/remote-entry.ts",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Module.js"
+          ],
+          "async": []
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "host",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "shop": "workspace:*",
+    "cart": "workspace:*",
+    "about": "workspace:*"
+  }
+}

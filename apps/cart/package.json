@@ -1,0 +1,34 @@
+{
+  "name": "cart",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "cart",
+    "targets": {
+      "serve": {
+        "options": {
+          "port": 4202
+        },
+        "dependsOn": [
+          "typecheck",
+          "host:serve"
+        ]
+      },
+      "build": {
+        "dependsOn": [
+          "^build",
+          "typecheck"
+        ]
+      }
+    }
+  },
+  "exports": {
+    "./Module": {
+      "@fotopixel/nx-mfe-discovery": "./src/remote-entry.ts",
+      "types": "./src/remote-entry.ts",
+      "import": "./src/remote-entry.ts",
+      "default": "./src/remote-entry.ts"
+    }
+  },
+  "types": "./src/remote-entry.ts"
+}
