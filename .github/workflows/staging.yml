@@ -1,0 +1,87 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Start Nx Cloud CI Run
+        run: pnpm nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+
+      - name: Determine affected apps
+        id: affected
+        run: |
+          AFFECTED=$(pnpm nx show projects --affected --base=HEAD~1 --head=HEAD --type=app | tr '\n' ',' | sed 's/,$//')
+          echo "apps=$AFFECTED" >> "$GITHUB_OUTPUT"
+          echo "Affected apps: $AFFECTED"
+
+      - name: Build affected
+        run: pnpm nx affected --target=build --base=HEAD~1 --head=HEAD --parallel=3
+
+      - name: Upload to S3
+        if: steps.affected.outputs.apps != ''
+        run: node scripts/upload-to-s3.js
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-west-1
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          COMMIT_SHA: ${{ github.sha }}
+          AFFECTED_APPS: ${{ steps.affected.outputs.apps }}
+
+      - name: Get Cognito token
+        if: steps.affected.outputs.apps != ''
+        id: cognito
+        run: |
+          TOKEN=$(node scripts/get-cognito-token.js)
+          echo "::add-mask::$TOKEN"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-west-1
+          COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          COGNITO_USERNAME: ${{ secrets.COGNITO_USERNAME }}
+          COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
+
+      - name: Register and deploy to staging
+        if: steps.affected.outputs.apps != ''
+        run: node scripts/register-mfe-versions.js
+        env:
+          DISCOVERY_ADMIN_API: ${{ secrets.DISCOVERY_ADMIN_API }}
+          DISCOVERY_TOKEN: ${{ steps.cognito.outputs.token }}
+          DISCOVERY_PROJECT_ID: ${{ secrets.STAGING_PROJECT_ID }}
+          CDN_BASE: ${{ secrets.CDN_BASE }}
+          COMMIT_SHA: ${{ github.sha }}
+          DEPLOYMENT_STRATEGY: AllAtOnce
+          AFFECTED_APPS: ${{ steps.affected.outputs.apps }}
+
+      - name: Pre-register version in production (available for promotion)
+        if: steps.affected.outputs.apps != ''
+        run: node scripts/register-mfe-versions.js
+        env:
+          DISCOVERY_ADMIN_API: ${{ secrets.DISCOVERY_ADMIN_API }}
+          DISCOVERY_TOKEN: ${{ steps.cognito.outputs.token }}
+          DISCOVERY_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
+          CDN_BASE: ${{ secrets.CDN_BASE }}
+          COMMIT_SHA: ${{ github.sha }}
+          AFFECTED_APPS: ${{ steps.affected.outputs.apps }}

@@ -4,7 +4,12 @@
   "private": true,
   "packageManager": "pnpm@10.29.2",
   "scripts": {
-    "nx": "nx"
+    "nx": "nx",
+    "dev:host": "nx run-many --projects=discovery-proxy,host --target=serve --parallel",
+    "dev:shop": "nx run-many --projects=discovery-proxy,host,shop --target=serve --parallel",
+    "dev:cart": "nx run-many --projects=discovery-proxy,host,cart --target=serve --parallel",
+    "dev:about": "nx run-many --projects=discovery-proxy,host,about --target=serve --parallel",
+    "dev:all": "nx run-many --projects=discovery-proxy,host,shop,cart,about --target=serve --parallel"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -12,6 +17,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
     "@emotion/babel-plugin": "11.13.5",
     "@eslint/js": "^9.8.0",
     "@module-federation/enhanced": "^0.21.2",
@@ -33,6 +40,8 @@
     "@swc/helpers": "~0.5.18",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "20.19.9",
     "@types/react": "^19.0.0",
@@ -58,6 +67,8 @@
   "dependencies": {
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "6.30.3"
