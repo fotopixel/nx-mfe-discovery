@@ -1,0 +1,32 @@
+### -------------------------------------------------------
+### Frontend Discovery Service — Consumer API
+### -------------------------------------------------------
+### Public endpoints (no auth required).
+### The host app and discovery-proxy call these at runtime.
+### -------------------------------------------------------
+
+
+### =====================
+### Staging
+### =====================
+
+### Get staging manifest (all MFEs with active versions)
+GET {{$dotenv DISCOVERY_CONSUMER_API}}/projects/{{$dotenv STAGING_PROJECT_ID}}/microFrontends
+
+###
+
+### =====================
+### Production
+### =====================
+
+### Get production manifest
+GET {{$dotenv DISCOVERY_CONSUMER_API}}/projects/{{$dotenv PRODUCTION_PROJECT_ID}}/microFrontends
+
+###
+
+### =====================
+### Local Discovery Proxy
+### =====================
+
+### Get local manifest (staging with local overrides)
+GET http://localhost:4300/microFrontends

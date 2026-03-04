@@ -1,0 +1,17 @@
+{
+  "name": "discovery-proxy",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/discovery-proxy/src",
+  "projectType": "application",
+  "tags": ["scope:tooling"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "command": "tsx --watch apps/discovery-proxy/src/main.ts",
+        "readyWhen": "Discovery Proxy running"
+      }
+    }
+  }
+}

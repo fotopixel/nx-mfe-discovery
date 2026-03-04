@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/host"
+    },
+    {
+      "path": "./apps/shop"
+    },
+    {
+      "path": "./apps/cart"
+    },
+    {
+      "path": "./apps/about"
+    },
+    {
+      "path": "./libs/shared/ui"
+    },
+    {
+      "path": "./apps/discovery-proxy"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+### -------------------------------------------------------
+### Frontend Discovery Service — Admin API
+### -------------------------------------------------------
+### Prerequisites:
+###   1. Fill Cognito + API values in .env.local
+###   2. Run `pnpm get-token` to fetch and store a token
+### -------------------------------------------------------
+
+
+### =====================
+### Micro Frontends
+### =====================
+
+### List MFEs in staging project
+GET {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv STAGING_PROJECT_ID}}/microFrontends
+Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+
+###
+
+### List MFEs in production project
+GET {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv PRODUCTION_PROJECT_ID}}/microFrontends
+Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+
+###
+
+### Create a new MFE in staging
+# POST {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv STAGING_PROJECT_ID}}/microFrontends
+# Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+# Content-Type: application/json
+#
+# {
+#   "microFrontend": {
+#     "name": "shop"
+#   }
+# }
+
+
+### =====================
+### Versions
+### =====================
+
+### List all versions for an MFE
+# Replace MFE_ID_HERE with the MFE ID from the "List MFEs" response
+GET {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv STAGING_PROJECT_ID}}/microFrontends/4fa30dd3-6dc1-4076-b1b6-a02a4fc4e59e/versions
+Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+
+###
+
+### Register a new version (first version — no deployment strategy)
+# Replace MFE_ID_HERE and COMMIT_SHA_HERE with actual values
+POST {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv STAGING_PROJECT_ID}}/microFrontends/MFE_ID_HERE/versions
+Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+Content-Type: application/json
+
+{
+  "version": {
+    "url": "https://your-cdn.cloudfront.net/shop/COMMIT_SHA_HERE/remoteEntry.js",
+    "metadata": {
+      "version": "COMMIT_SHA_HERE",
+      "integrity": "sha384-..."
+    }
+  }
+}
+
+###
+
+### Register version with deployment strategy (subsequent versions)
+POST {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv STAGING_PROJECT_ID}}/microFrontends/MFE_ID_HERE/versions
+Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+Content-Type: application/json
+
+{
+  "version": {
+    "url": "https://your-cdn.cloudfront.net/shop/COMMIT_SHA_HERE/remoteEntry.js",
+    "metadata": {
+      "version": "COMMIT_SHA_HERE",
+      "integrity": "sha384-..."
+    }
+  },
+  "deploymentStrategy": "AllAtOnce"
+}
+
+
+### =====================
+### Deployments (Promote)
+### =====================
+
+### Promote a version to production (AllAtOnce)
+POST {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv PRODUCTION_PROJECT_ID}}/microFrontends/MFE_ID_HERE/deployment
+Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+Content-Type: application/json
+
+{
+  "targetVersion": "COMMIT_SHA_HERE",
+  "deploymentStrategy": "AllAtOnce"
+}
+
+###
+
+### Promote with Linear (gradual rollout)
+# POST {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv PRODUCTION_PROJECT_ID}}/microFrontends/MFE_ID_HERE/deployment
+# Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+# Content-Type: application/json
+#
+# {
+#   "targetVersion": "COMMIT_SHA_HERE",
+#   "deploymentStrategy": "Linear"
+# }
+
+###
+
+### Promote with Canary
+# POST {{$dotenv DISCOVERY_ADMIN_API}}/projects/{{$dotenv PRODUCTION_PROJECT_ID}}/microFrontends/MFE_ID_HERE/deployment
+# Authorization: Bearer {{$dotenv DISCOVERY_TOKEN}}
+# Content-Type: application/json
+#
+# {
+#   "targetVersion": "COMMIT_SHA_HERE",
+#   "deploymentStrategy": "Canary"
+# }

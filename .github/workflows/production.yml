@@ -1,0 +1,68 @@
+name: Promote to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: Remote app to promote
+        required: true
+        type: choice
+        options:
+          - shop
+          - cart
+          - about
+      version:
+        description: Commit SHA of the staging-tested build to promote
+        required: true
+        type: string
+      deployment_strategy:
+        description: Deployment strategy (built-in to Discovery Service)
+        required: true
+        type: choice
+        default: Canary10Percent5Minutes
+        options:
+          - AllAtOnce
+          - Canary10Percent5Minutes
+          - Canary10Percent10Minutes
+          - Canary10Percent15Minutes
+          - Linear10PercentEvery1Minute
+          - Linear10PercentEvery2Minutes
+          - Linear10PercentEvery3Minutes
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Get Cognito token
+        id: cognito
+        run: |
+          TOKEN=$(node scripts/get-cognito-token.js)
+          echo "::add-mask::$TOKEN"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-central-1
+          COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          COGNITO_USERNAME: ${{ secrets.COGNITO_USERNAME }}
+          COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
+
+      - name: Promote ${{ inputs.app }} to production (${{ inputs.deployment_strategy }})
+        run: node scripts/promote-to-production.js
+        env:
+          DISCOVERY_ADMIN_API: ${{ secrets.DISCOVERY_ADMIN_API }}
+          DISCOVERY_TOKEN: ${{ steps.cognito.outputs.token }}
+          DISCOVERY_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
+          CDN_BASE: ${{ secrets.CDN_BASE }}
+          APP: ${{ inputs.app }}
+          COMMIT_SHA: ${{ inputs.version }}
+          DEPLOYMENT_STRATEGY: ${{ inputs.deployment_strategy }}

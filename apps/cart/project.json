@@ -1,0 +1,9 @@
+{
+  "name": "cart",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "serve": {
+      "dependsOn": []
+    }
+  }
+}
